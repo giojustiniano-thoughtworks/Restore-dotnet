@@ -1,10 +1,10 @@
-import { useState } from 'react';
 import { Box, Container, CssBaseline, createTheme, ThemeProvider } from '@mui/material';
 import { Outlet } from 'react-router-dom';
 import NavBar from './NavBar';
+import { useAppSelector } from '../store/store';
 
 function App() {
-  const [darkMode, setDarkMode] = useState(true);
+  const darkMode = useAppSelector(state => state.ui.darkMode);
 
   const paletteType = darkMode ? 'dark' : 'light';
 
@@ -19,14 +19,10 @@ function App() {
 
   const bodyBackground = `radial-gradient(circle, ${darkMode ? '#1e3eBa, #111B27' : '#baecf9, #f0f9ff'})`;
 
-  const toggleDarkMode = () => {
-    setDarkMode(prevState => !prevState);
-  };
-
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <NavBar darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
+      <NavBar />
 
       <Box sx={{
         minHeight: '100vh',

@@ -1,29 +1,13 @@
 import { useParams } from 'react-router-dom';
-import type { Product } from '../../app/models/product';
-import { useEffect, useState } from 'react';
-import { Button, Divider, Grid, Table,  TableBody, TableCell, TableContainer, TableRow, TextField, Typography } from '@mui/material';
+import { Button, Divider, Grid, Table, TableBody, TableCell, TableContainer, TableRow, TextField, Typography } from '@mui/material';
+import { useFetchProductDetailsQuery } from './catalogApi';
 
 export default function ProductDetails() {
   const { id } = useParams();
-  const [product, setProduct] = useState<Product | null>(null);
 
-  useEffect(() => {
-    // Simulate fetching product details from an API
-    const fetchProduct = async () => {
-      try {
-        // Replace with actual API call
-        const response = await fetch(`https://localhost:5001/api/products/${id}`);
-        const data = await response.json();
-        setProduct(data);
-      } catch (error) {
-        console.error('Failed to fetch product details:', error);
-      }
-    };
+  const { data: product, isLoading } = useFetchProductDetailsQuery(Number(id || 0));
 
-    fetchProduct();
-  }, [id]);
-
-  if (!product) {
+  if (isLoading || !product) {
     return <div>Loading...</div>;
   }
 
@@ -35,7 +19,7 @@ export default function ProductDetails() {
     { label: 'Quantity in stock', value: product.quantityInStock },
   ] as const;
 
-  return (  
+  return (
     <Grid container spacing={6} sx={{ mx: 'auto', mt: 4 }}>
       <Grid size={6}>
         <img src={product.pictureUrl} alt={product.name} style={{ width: '100%' }} />
@@ -51,12 +35,12 @@ export default function ProductDetails() {
         <TableContainer>
 
           <Table sx={{
-            '& td': {fontSize: '1rem'}
+            '& td': { fontSize: '1rem' }
           }}>
             <TableBody>
               {productDetails.map((detail) => (
                 <TableRow key={detail.label}>
-                  <TableCell sx={{fontWeight: 'bold'}}>{detail.label}</TableCell>
+                  <TableCell sx={{ fontWeight: 'bold' }}>{detail.label}</TableCell>
                   <TableCell>{detail.value}</TableCell>
                 </TableRow>
               ))}
@@ -70,9 +54,9 @@ export default function ProductDetails() {
           </Grid>
 
           <Grid size={6}>
-            <Button size='large' color='primary' variant='contained' fullWidth sx={{ height: '55px'}}>
+            <Button size='large' color='primary' variant='contained' fullWidth sx={{ height: '55px' }}>
               Add to basket
-            </Button> 
+            </Button>
           </Grid>
         </Grid>
       </Grid>
